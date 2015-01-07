@@ -9,64 +9,38 @@ hteam = raw_input('enter home team (e.g. "MIA" or "NE"): ')
 ateam = raw_input('enter away team (e.g. "MIA" or "NE"): ')
 
 #query the database for home team
-#TODO: make a function for the home & away queries or can I combine
-#the queries to not duplicate??
-q = nfldb.Query(db)
-q.game(season_year = 2014)
-q.game(season_type = 'Regular').sort(('week', 'asc'))
-q.game(team = hteam)
+#TODO create better variable & argument names?
+def query_the_db(HorA):
+    q = nfldb.Query(db)
+    q.game(season_year = 2014)
+    q.game(season_type = 'Regular').sort(('week', 'asc'))
+    q.game(team = HorA)
 
-#convert results of hteam query to strings in a list
-hweekly = []
-for week in q.as_games():
-    results = str(week)
-    hweekly.append(results)
+    #convert results of query to strings in a list
+    weekly = []
+    for week in q.as_games():
+        results = str(week)
+        weekly.append(results)
+    return weekly
 
-#query the database for away team
-q = nfldb.Query(db)
-q.game(season_year = 2014)
-q.game(season_type = 'Regular').sort(('week', 'asc'))
-q.game(team = ateam)
-
-#convert results of ateam query to strings in a list
-aweekly = []
-for week in q.as_games():
-    results = str(week)
-    aweekly.append(results)
-
-#Testing, TODO remove
-print hweekly
-print aweekly
-
-#counters
-score_h = 0
-score_a = 0
+hweekly = query_the_db(hteam)
+aweekly = query_the_db(ateam)
 
 #loop through weekly games & obtain total score to date for season
-#TODO: create a function for these
+#TODO: create better variable & argument names?
+def get_avg_score(HorA_weekly, HorA_team):
+    count_score = 0
+    for game in (HorA_weekly):
+        week = game.split()
+        locateTeam = week.index(HorA_team)
+        count_score = count_score + float(week[locateTeam + 1].strip('()'))
+    return count_score / len(HorA_weekly)
 
-for game in hweekly:
-    #turn weekly game string into a list
-    mk_str_lst = game.split()
-    #find the team's name in the list
-    find_team = mk_str_lst.index(hteam)
-    #find team's score which is next in list
-    score_h = score_h + float(mk_str_lst[find_team + 1].strip('()'))
+hteam_avg_score = get_avg_score(hweekly, hteam)
+ateam_avg_score = get_avg_score(aweekly, ateam)
 
-for game in aweekly:
-    #turn weekly game string into a list
-    mk_str_lst = game.split()
-    #find the team's name in the list
-    find_team = mk_str_lst.index(ateam)
-    #find team's score which is next in list
-    score_a = score_a + float(mk_str_lst[find_team + 1].strip('()'))
-
-avg_score_h = score_h / len(hweekly)
-avg_score_a = score_a / len(aweekly)
-
-#testing, TODO remove
-print avg_score_h
-print avg_score_a
+print hteam, hteam_avg_score
+print ateam, ateam_avg_score
 
 #average 'points for' for the home and away team
-print (avg_score_h + avg_score_a) / 2
+print  (hteam_avg_score + ateam_avg_score) / 2
