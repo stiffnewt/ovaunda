@@ -7,6 +7,7 @@ db = nfldb.connect()
 #TODO: add error checking for wrong input
 hteam = raw_input('enter home team (e.g. "MIA" or "NE"): ')
 ateam = raw_input('enter away team (e.g. "MIA" or "NE"): ')
+OUscore = float(raw_input('O/U scare: '))
 
 #query the database for home team
 #TODO create better variable & argument names?
@@ -43,4 +44,20 @@ print hteam, hteam_avg_score
 print ateam, ateam_avg_score
 
 #average 'points for' for the home and away team
-print  (hteam_avg_score + ateam_avg_score) / 2
+ovaunda =  (hteam_avg_score + ateam_avg_score)
+
+print "ovaunda says: ", ovaunda
+print "Vegas says: ", OUscore
+
+if ovaunda > OUscore:
+    if (ovaunda - OUscore) > 3:
+        print "go for the over with good confidence!"
+    else:
+        print "could go either way - the over is more likely."
+elif (ovaunda < OUscore):
+    if (OUscore - ovaunda) > 3:
+        print "go for the under with good confidence!"
+    else:
+        print "could go either way - the under is more likely."
+else:
+    print "ovaunda and Vegas are on the same page - who knows..."
