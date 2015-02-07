@@ -7,7 +7,7 @@ db = nfldb.connect()
 #TODO: add error checking for wrong input
 hteam = raw_input('enter home team (e.g. "MIA" or "NE"): ')
 ateam = raw_input('enter away team (e.g. "MIA" or "NE"): ')
-OUscore = float(raw_input('O/U scare: '))
+OUscore = float(raw_input('O/U score: '))
 
 #query the database for home team
 #TODO create better variable & argument names?
